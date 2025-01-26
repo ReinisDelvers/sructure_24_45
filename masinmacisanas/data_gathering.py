@@ -19,11 +19,15 @@ def save_page(url, name):
 
 def save_all_pages(number):
     for i in range(1, number+1):
-        save_page(f"{URL}page{i}.html", f"{PAGES}lapa{i}.html")
-        time.sleep(0.5)
+        save_page(f"{URL}page{i}.html", f"{PAGES}lapa{i+401}.html")
+        time.sleep(1)
 
 def get_info(page):
     data = []
+    replace1 = str.maketrans({"D": "", "E": "", "H": "", "B": ""})
+    replace2 = str.maketrans({".": "", "0": "", "1": "", "2": "", "3": "", "4": "", "5": "", "6": "", "7": "", "8": "", "9": ""})
+    replace3 = str.maketrans({"t": "", "ū": "", "k": "", "s": "", "t": "", ".": ""})
+    replace4 = str.maketrans({",": "", "€": ""})
     with open(page, "r", encoding="utf-8") as f:
         html = f.read()
     soup = bs(html, "html.parser")
@@ -38,12 +42,39 @@ def get_info(page):
         auto = {}
         auto["advertisment_site"] = fields[1].find("a")["href"]
         auto["image"] = fields[1].find("img")["src"]
+
+        auto["marka"] = fields[3].get_text()
+        auto["gads"] = int(fields[4].get_text())
+        Volume = 0
+        try:
+            Volume = float(fields[5].get_text().translate(replace1))
+        except:
+            Volume = None
+        auto["tilpums"] = Volume
+        Type = ""
+        try:
+            Type = fields[5].get_text().translate(replace2)
+        except:
+            Type = ""
+        auto["tips"] = Type
+        Mileage = 0
+        try:
+            Mileage = int(fields[6].get_text().translate(replace3))*1000
+        except:
+            Mileage = None
+        auto["nobraukums"] = Mileage
+        Price = 0
+        try:
+            Price = int(fields[7].get_text().translate(replace4))
+        except:
+            Price = None
+        auto["cena"] = Price
         data.append(auto)
     return data
         
 def save_data(data):
     with open(DATA+"sslv.csv", "w", encoding="utf-8") as f:
-        field_name = ["advertisment_site", "image"]
+        field_name = ["advertisment_site", "image", "marka", "gads", "tilpums", "tips", "nobraukums", "cena"]
         w = csv.DictWriter(f, fieldnames=field_name)
         w.writeheader()
         for auto in data:
@@ -57,5 +88,6 @@ def get_all_info(number):
         all_data += data
     return all_data
 
-# save_all_pages(280)
-save_data(get_all_info(280))
+# save_all_pages(121)
+#280 121
+save_data(get_all_info(401))

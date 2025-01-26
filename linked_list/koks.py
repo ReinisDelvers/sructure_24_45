@@ -20,33 +20,30 @@ class Koks:
         if self.sakne == None:
             self.sakne = Node(jaunais)
             return
-        limenis = 1
-        vecaks = self.sakne
-        if jaunais>vecaks.info:
-            vieta = vecaks.bigger
-        else:
-            vieta = vecaks.smaller
-        while vieta:
-            limenis +=1
-            vecaks = vieta
-            if jaunais>vecaks.info:
-                vieta = vecaks.bigger
+        limenis = 0
+        elements = self.sakne
+        self.rec_add(jaunais, elements, limenis)
+
+    def rec_add(self, jaunais, elements, limenis):
+        limenis += 1
+        if elements.info > jaunais:
+            if elements.smaller == None:
+                elements.smaller = Node(jaunais, vecaks=elements, limenis=limenis)
             else:
-                vieta = vecaks.smaller
-        if jaunais>vecaks.info:
-            vecaks.bigger = Node(jaunais, vecaks=vecaks, limenis=limenis)
-        else:
-            vecaks.smaller = Node(jaunais, vecaks=vecaks, limenis=limenis)
+                self.rec_add(jaunais, elements.smaller, limenis)
+        if elements.info < jaunais:
+            if elements.bigger == None:
+                elements.bigger = Node(jaunais, vecaks=elements, limenis=limenis)
+            else:
+                self.rec_add(jaunais, elements.bigger, limenis)
         return
+
     
     def read(self):
         if self.sakne == None:
             print("Kokā nav neviena elementa!")
             return
         elements = self.sakne
-        # elements.read()
-        # self.read(elements.smaller)
-        # self.read(elements.bigger)
         self.read_ja_ir(elements)
 
     def read_ja_ir(self, elements):
@@ -58,18 +55,22 @@ class Koks:
         return
     
     def sort(self):
+        list = []
         if self.sakne == None:
             print("Kokā nav neviena elementa!")
-            return
+            return list
         sakums = self.sakne
-        self.read_mazakais(sakums)
+        self.read_mazakais(sakums, list)
+        return list
     
-    def read_mazakais(self, mazakais):
+    def read_mazakais(self, mazakais, list):
         if mazakais.smaller:
-            self.read_mazakais(mazakais.smaller)
+            self.read_mazakais(mazakais.smaller, list)
+        list.append(mazakais.info)
         mazakais.read()
         if mazakais.bigger:
-            self.read_mazakais(mazakais.bigger)
+            self.read_mazakais(mazakais.bigger, list)
+        return list
 
     def search(self, meklejamais):
         limenis, vecaks, skaits = self.parbauda_vienu(meklejamais, self.sakne, 0)
@@ -107,5 +108,6 @@ koks.add(7)
 koks.add(3)
 koks.add(2)
 koks.add(18)
-koks.sort()
-koks.search(213)
+print(koks.sort())
+koks.search(90)
+
