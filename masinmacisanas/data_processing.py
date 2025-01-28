@@ -17,4 +17,4 @@ def distribution(file, colomn):
     plt.show()
 
 
-heat_map("masinmacisanas/auto_imports.csv")
+heat_map("masinmacisanas/data/auto_imports.csv")

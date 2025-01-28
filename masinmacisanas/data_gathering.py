@@ -19,7 +19,7 @@ def save_page(url, name):
 
 def save_all_pages(number):
     for i in range(1, number+1):
-        save_page(f"{URL}page{i}.html", f"{PAGES}lapa{i+401}.html")
+        save_page(f"{URL}page{i}.html", f"{PAGES}lapa{i+280}.html")
         time.sleep(1)
 
 def get_info(page):
@@ -88,6 +88,6 @@ def get_all_info(number):
         all_data += data
     return all_data
 
-# save_all_pages(121)
-#280 121
-save_data(get_all_info(401))
+# save_all_pages(277)
+#280 277
+save_data(get_all_info(280))
