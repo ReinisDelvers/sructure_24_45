@@ -47,13 +47,24 @@ def get_info(page):
         auto["gads"] = int(fields[4].get_text())
         Volume = 0
         try:
+            if fields[5].get_text().translate(replace2) == "E":
+                Volume = 0
             Volume = float(fields[5].get_text().translate(replace1))
         except:
             Volume = None
         auto["tilpums"] = Volume
         Type = ""
         try:
-            Type = fields[5].get_text().translate(replace2)
+            Temp = fields[5].get_text().translate(replace2)
+            if Temp == "D":
+                Type = 1
+            if Temp == "E":
+                Type = 2
+            if Temp == "H":
+                Type = 3
+            if Temp == "B":
+                Type = 4
+
         except:
             Type = ""
         auto["tips"] = Type
@@ -90,4 +101,4 @@ def get_all_info(number):
 
 # save_all_pages(277)
 #280 277
-save_data(get_all_info(280))
+save_data(get_all_info(557))

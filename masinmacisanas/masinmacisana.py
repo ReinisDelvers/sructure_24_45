@@ -32,7 +32,7 @@ def data_preperation(file, column_x, column_y):
     data_file = pd.read_csv(file)
     data_file.dropna(inplace=True)
     x_var = data_file[column_x]
-    y_var = data_file[column_y]
+    y_var = data_file[column_y].values.ravel()
     x_train, x_test, y_train, y_test = train_test_split(x_var, y_var, test_size=0.2, random_state=0)
     return x_train, x_test, y_train, y_test
     
@@ -57,8 +57,8 @@ file2 = "masinmacisanas/data/auto_imports.csv"
 col_x2 = ["wheel-base", "length", "width", "height", "curb-weight", "engine-size", "bore", "stroke", "compression-ratio", "horsepower", "peak-rpm", "city-mpg", "highway-mpg"]
 col_y2 = ["price"]
 
-file3 = "masinmacisanas/data/sslv.csv"
-col_x3 = ["gads", "tilpums", "nobraukums"]
+file3 = "masinmacisanas/data/sslv280.csv"
+col_x3 = ["gads", "tilpums", "tips", "nobraukums"]
 col_y3 = ["cena"]
 #Prepare data
 x_train, x_test, y_train, y_test = data_preperation(file3, col_x3, col_y3)
@@ -70,9 +70,17 @@ model = training_model(model, x_train, y_train)
 result = test_model(model, x_test)
 print(model_quality(y_test, result))
 
-# file1_x = [2000, 1.6, 500000]
-# file1_res = 1000
 
-# results_1 = test_model(model, file1_x)
-# print(cl(f"{results_1}"))
+#Car price predictor
+dataforpricepredictions = {
+    "gads": [2000], #year
+    "tilpums": [1], #engine volume for elecrtic write 0
+    "tips" : [1], #fuel type 1 == Diesel, 2 == Electric, 3 == Hybrid, 4 == Gasoline
+    "nobraukums": [200000] #mileage
+}
+
+dfpp = pd.DataFrame(dataforpricepredictions)
+
+result_x = test_model(model, dfpp)
+print(cl(f"Predicted car price:{result_x}", 'green', attrs=['bold']))
 
